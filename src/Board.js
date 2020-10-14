@@ -207,14 +207,43 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+    hasMinorDiagonalConflictAt: function(startingCol, startingRow) {
+      const board = this.rows();
+      let count = 0;
+      for (let rowIdx = startingRow, colIdx = startingCol; colIdx >= 0 && rowIdx < board[0].length; rowIdx++, colIdx--) {
+        let value = board[rowIdx][colIdx];
+        if (!value) {
+          continue;
+        }
+
+        if (count === 0) {
+          count++;
+        } else {
+          return true;
+        }
+      }
 
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+      const board = this.rows();
+      const boardLength = board[0].length;
+
+      for (let col = 0; col < boardLength; col++) {
+        if (this.hasMinorDiagonalConflictAt(col, 0)) {
+          return true;
+        }
+      }
+
+      for (let row = 1; row < boardLength - 1; row++) {
+        if (this.hasMinorDiagonalConflictAt(boardLength - 1, row)) {
+          return true;
+        }
+      }
       return false; // fixme
+
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
