@@ -78,6 +78,7 @@
     // --------------------------------------------------------------
     //
     // test if a specific row on this board contains a conflict
+    //time complexity - O(n), where n = length of matrix
     hasRowConflictAt: function (rowIndex) {
       const row = this.get(rowIndex);
 
@@ -96,14 +97,8 @@
       return false;
     },
 
-
-    toggleTest: function (rowIdx, colIdx) {
-      console.log(this.rows());
-      this.togglePiece(rowIdx, colIdx);
-      console.log(this.rows());
-    },
-
     // test if any rows on this board contain conflicts
+    // O(n^2), where n = length of matrix
     hasAnyRowConflicts: function () {
       const board = this.rows();
 
@@ -121,6 +116,7 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
+    // O(n), where n = length of matrix
     hasColConflictAt: function (colIndex) {
       const board = this.rows();
 
@@ -141,6 +137,7 @@
     },
 
     // test if any columns on this board contain conflicts
+    // O(n^2), where n = length of matrix
     hasAnyColConflicts: function () {
       let rowLength = this.rows().length;
 
@@ -159,6 +156,7 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
+    // O(n), where n = length of matrix
     hasMajorDiagonalConflictAt: function (startingCol, startingRow) {
       //assume column is at 0, and you are given the index.
       //with major diagonal, you are going topleft -> bottom right
@@ -181,6 +179,7 @@
     },
 
     // test if any major diagonals on this board contain conflicts
+    // O(n^2), where n = length of matrix
     hasAnyMajorDiagonalConflicts: function () {
       // check all the diags so we need to start from somwhere
       // we get starts at (0, 0) end at (4, 4)
@@ -206,6 +205,7 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
+    // O(n), where n = length of matrix
     hasMinorDiagonalConflictAt: function (startingCol, startingRow) {
       const board = this.rows();
       let count = 0;
@@ -226,6 +226,7 @@
     },
 
     // test if any minor diagonals on this board contain conflicts
+    // O(n^2), where n = length of matrix
     hasAnyMinorDiagonalConflicts: function () {
       const boardLength = this.rows().length;
 

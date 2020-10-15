@@ -41,6 +41,7 @@ const isQueenPlacable = function (board, tryRowIdx, tryColIdx) {
 
 //n = size of board, items can be either 0 or 1.
 //n is also number of rooks to place;
+// O(n^2), where n = length of matrix
 window.findNRooksSolution = function (n) {
   const boardInstance = new Board({ n });
   const board = boardInstance.rows();
@@ -65,6 +66,7 @@ window.findNRooksSolution = function (n) {
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
+// O(n^n), where n = length of matrix
 window.countNRooksSolutions = function (n) {
   const boardInstance = new Board({ n });
   const board = boardInstance.rows();
@@ -100,13 +102,16 @@ window.countNRooksSolutions = function (n) {
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
+// O(n^n), where n = length of matrix
 window.findNQueensSolution = function (n) {
   if (n === 1) {
     return [[1]];
   } else if (n === 0) {
     return [];
   }
+
   const board = Array(n).fill().map(() => Array(n).fill(0));
+
   const plays = col => {
     if (col === n) {
       return true;
@@ -125,6 +130,7 @@ window.findNQueensSolution = function (n) {
       }
 
     }
+    //tells previous stack to backtrack after not finding
     return false;
   };
   plays(0);
@@ -135,6 +141,7 @@ window.findNQueensSolution = function (n) {
 
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
+// O(n^n), where n = length of matrix
 window.countNQueensSolutions = function (n) {
   let solutionCount = 0; //fixme
 
@@ -160,6 +167,6 @@ window.countNQueensSolutions = function (n) {
     }
     return false;
   };
-  plays(0);
+  plays(0); //returns false;
   return solutionCount;
 };
