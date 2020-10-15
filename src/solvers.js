@@ -14,17 +14,78 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 
-
+//n = size of board, items can be either 0 or 1.
+//n is also number of rooks to place;
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
+  const boardInstance = new Board({n});
+  const board = boardInstance.rows();
+  // iterate through the board
+  // so we will toggle from 0 to 1
+  // we can ask if that created a conflict
+  // if it did then we can togle back to 0 and continue
+  // if it didnt then continue
+  // do this until we have look at all the squares or we reached n
+  /**
+     [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0]
+    ]
+    */
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  const placeRookHelper = function (col) {
+    if (col === n) {
+      return false;
+    }
+
+    for (let rowIdx = 0; rowIdx < board.length; rowIdx++) {
+      // const insertAttempt = board[rowIdx][col];
+      boardInstance.togglePiece(rowIdx, col);
+      if (boardInstance.hasRowConflictAt(rowIdx)) {
+
+        boardInstance.togglePiece(rowIdx, col);
+      } else {
+
+        placeRookHelper(col + 1);
+      }
+
+    }
+  };
+  placeRookHelper(0);
+  return board;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  const boardInstance = new Board({ n });
+  const board = boardInstance.rows();
+  var solutionCount = 0;
+
+  const placeRookHelper = function (col) {
+    if (col === n) {
+      solutionCount++;
+      return false;
+    }
+
+    for (let rowIdx = 0; rowIdx < board.length; rowIdx++) {
+      // const insertAttempt = board[rowIdx][col];
+      boardInstance.togglePiece(rowIdx, col);
+      if (boardInstance.hasRowConflictAt(rowIdx)) {
+
+        boardInstance.togglePiece(rowIdx, col);
+      } else {
+
+        if (!placeRookHelper(col + 1)) {
+          boardInstance.togglePiece(rowIdx, col);
+        }
+      }
+
+    }
+
+    return false;
+  };
+  placeRookHelper(0);
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
