@@ -1,3 +1,28 @@
+const isQueenPlacable = function (board, tryRowIdx, tryColIdx) {
+
+  //checks the current row given the current col
+  for (let colIdx = tryColIdx; colIdx >= 0; colIdx--) {
+    if (board[tryRowIdx][colIdx] === 1) {
+      return false;
+    }
+  }
+
+  //checks major diagonal
+  for (let rowIdx = tryRowIdx, colIdx = tryColIdx; rowIdx >= 0 && colIdx >= 0; rowIdx--, colIdx--) {
+    if (board[rowIdx][colIdx] === 1) {
+      return false;
+    }
+
+  }
+
+  for (let rowIdx = tryRowIdx, colIdx = tryColIdx; rowIdx < board.length && colIdx >= 0; rowIdx++, colIdx--) {
+    if (board[rowIdx][colIdx] === 1) {
+      return false;
+    }
+  }
+  return true;
+};
+
 /*           _
    ___  ___ | |_   _____ _ __ ___
   / __|/ _ \| \ \ / / _ \ '__/ __|
@@ -16,23 +41,9 @@
 
 //n = size of board, items can be either 0 or 1.
 //n is also number of rooks to place;
-window.findNRooksSolution = function(n) {
-  const boardInstance = new Board({n});
+window.findNRooksSolution = function (n) {
+  const boardInstance = new Board({ n });
   const board = boardInstance.rows();
-  // iterate through the board
-  // so we will toggle from 0 to 1
-  // we can ask if that created a conflict
-  // if it did then we can togle back to 0 and continue
-  // if it didnt then continue
-  // do this until we have look at all the squares or we reached n
-  /**
-     [
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0]
-    ]
-    */
 
   const placeRookHelper = function (col) {
     if (col === n) {
@@ -43,13 +54,10 @@ window.findNRooksSolution = function(n) {
       // const insertAttempt = board[rowIdx][col];
       boardInstance.togglePiece(rowIdx, col);
       if (boardInstance.hasRowConflictAt(rowIdx)) {
-
         boardInstance.togglePiece(rowIdx, col);
       } else {
-
         placeRookHelper(col + 1);
       }
-
     }
   };
   placeRookHelper(0);
@@ -57,7 +65,7 @@ window.findNRooksSolution = function(n) {
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n) {
+window.countNRooksSolutions = function (n) {
   const boardInstance = new Board({ n });
   const board = boardInstance.rows();
   var solutionCount = 0;
@@ -92,17 +100,66 @@ window.countNRooksSolutions = function(n) {
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
-window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+window.findNQueensSolution = function (n) {
+  if (n === 1) {
+    return [[1]];
+  } else if (n === 0) {
+    return [];
+  }
+  const board = Array(n).fill().map(() => Array(n).fill(0));
+  const plays = col => {
+    if (col === n) {
+      return true;
+    }
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+    for (let row = 0; row < board.length; row++) {
+      if (!isQueenPlacable(board, row, col)) {
+        continue;
+      }
+
+      board[row][col] = 1;
+      if (!plays(col + 1)) {
+        board[row][col] = 0;
+      } else {
+        return true;
+      }
+
+    }
+    return false;
+  };
+  plays(0);
+  // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  return board;
 };
 
-// return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
-window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+
+// return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
+window.countNQueensSolutions = function (n) {
+  let solutionCount = 0; //fixme
+
+  const board = Array(n).fill().map(() => Array(n).fill(0));
+  const plays = col => {
+    if (col === n) {
+      solutionCount += 1;
+      return false;
+    }
+
+    for (let row = 0; row < board.length; row++) {
+      if (!isQueenPlacable(board, row, col)) {
+        continue;
+      }
+
+      board[row][col] = 1;
+      if (!plays(col + 1)) {
+        board[row][col] = 0;
+      } else {
+        return true;
+      }
+
+    }
+    return false;
+  };
+  plays(0);
   return solutionCount;
 };
